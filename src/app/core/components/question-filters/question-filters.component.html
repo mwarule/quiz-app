@@ -1,0 +1,10 @@
+<div class="grid">
+    <div class="col-12 md:col-6">
+        <p-multiSelect [options]="types" [(ngModel)]="selectedType" defaultLabel="Question type" optionLabel="label" optionValue="value" display="chip" (onChange)="onTypeChanged($event)">
+        </p-multiSelect>
+    </div>
+    <div class="col-12 md:col-6">
+        <input id="question-search-query" [(ngModel)]="searchQuery" type="text" placeholder="Filter Questions"
+        pInputText class="w-full">
+    </div>
+</div>

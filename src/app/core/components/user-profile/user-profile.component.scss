@@ -1,0 +1,17 @@
+.profile-container {
+    // ::ng-deep .profile-avatar {
+    //     width: 10rem !important;
+    //     height: 10rem !important;
+    // }
+    
+    ::ng-deep .profile-autocomplete {
+        .p-autocomplete-multiple-container  {
+            .p-autocomplete-input-token {
+                input {
+                    padding: 0.5rem;
+                }
+            }
+        }
+        
+    }
+}

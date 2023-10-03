@@ -1,0 +1,93 @@
+<div class="text-center mb-2">
+  <img src="assets/layout/images/logo-dark.svg" alt="Sakai logo" class="mb-2 w-6rem flex-shrink-0" />
+  <div class="text-900 text-3xl font-medium mb-4">Create an Account</div>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <div class="p-formgrid grid">
+      <div class="field col">
+        <label for="name" class="block">Name</label>
+        <input id="name" formControlName="name" type="text" placeholder="Name" pInputText class="w-full p-3">
+        <div *ngIf="getNameValue">
+          <small *ngIf="form.get('name')?.errors?.['required']" class="p-error">Name is required.</small>
+        </div>
+      </div>
+      <div class="field col">
+        <label for="email" class="block">Email</label>
+        <input id="email" formControlName="email" type="text" placeholder="Email address" pInputText class="w-full p-3">
+        <div *ngIf="getEmailValue">
+          <small *ngIf="form.get('email')?.errors?.['required']" class="p-error">Email is required.</small>
+          <small *ngIf="form.get('email')?.errors?.['email']" class="p-error">Please enter a valid email.</small>
+        </div>
+      </div>
+    </div>
+    <ng-container formGroupName="education">
+      <div class="p-formgrid grid">
+        <div class="field col">
+          <label for="board" class="block">Education Board</label>
+          <p-dropdown styleClass="w-full p-2" [options]="boards" formControlName="board" placeholder="Select the board"
+            optionLabel="label" optionValue="value"></p-dropdown>
+          <div *ngIf="getBoardValue">
+            <small *ngIf="form.get('board')?.errors?.['required']" class="p-error">Education board is required.</small>
+          </div>
+        </div>
+        <div class="field col">
+          <label for="medium" class="block">Medium</label>
+          <p-dropdown styleClass="w-full p-2" [options]="mediums" formControlName="medium" placeholder="Select the medium"
+            optionLabel="label" optionValue="value"></p-dropdown>
+          <div *ngIf="getMediumValue">
+            <small *ngIf="form.get('medium')?.errors?.['required']" class="p-error">Medium is required.</small>
+          </div>
+        </div>
+      </div>
+      <div class="p-formgrid grid">
+        <div class="field col">
+          <label for="standard" class="block">Class/Standard</label>
+          <p-dropdown styleClass="w-full p-2" [options]="standards" formControlName="standard" placeholder="Select the class"
+            optionLabel="label" optionValue="value"></p-dropdown>
+          <div *ngIf="getStandardValue">
+            <small *ngIf="form.get('standard')?.errors?.['required']" class="p-error">Class/Standard is required.</small>
+          </div>
+        </div>
+        <div class="field col">
+          <label for="favSubjects" class="block">Favoutire Subjects</label>
+          <p-autoComplete [forceSelection]="true" formControlName="favSubjects" [suggestions]="filteredSubjects"
+            (completeMethod)="filterSubjects($event)" [multiple]="true" [showEmptyMessage]="true" [unique]="true"
+            field="label"></p-autoComplete>
+          <div *ngIf="getFavSubjectsValue">
+            <small *ngIf="form.get('favSubjects')?.errors?.['required']" class="p-error">Favoutire subjects are
+              required.</small>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="p-formgrid grid">
+      <div class="field col">
+        <label for="password" class="block">Password</label>
+        <p-password id="password" formControlName="password" placeholder="Password"
+          inputStyleClass="w-full p-3"></p-password>
+        <div *ngIf="getPasswordValue">
+          <small *ngIf="form.get('password')?.errors?.['required']" class="p-error">Password is required.</small>
+        </div>
+      </div>
+      <div class="field col">
+        <label for="confirmPassword" class="block">Confirm Password</label>
+        <input id="confirmPassword" formControlName="confirmPassword" type="text" placeholder="Confirm Password"
+          pInputText class="w-full p-3 ">
+        <div *ngIf="getConfirmPasswordValue">
+          <small *ngIf="form.get('confirmPassword')?.errors?.['required']" class="p-error">Confirm Password is
+            required.</small>
+          <small *ngIf="form.get('confirmPassword')?.errors?.['confirmedValidator']" class="p-error">Password and
+            Confirm Password must match.</small>
+        </div>
+      </div>
+    </div>
+    <button [loading]="loading" [disabled]="form.invalid" pButton pRipple label="Register"
+      class="mb-2 w-full p-3 text-xl"></button>
+    <div>
+      Already have an account?
+      <a class="font-medium no-underline cursor-pointer" style="color: var(--primary-color)"
+        [routerLink]="['auth/login']">Login here</a>
+    </div>
+  </div>
+</form>

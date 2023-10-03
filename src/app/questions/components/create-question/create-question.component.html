@@ -1,0 +1,104 @@
+<div class="grid add-question-container">
+    <div class="col-12 md:col-12">
+        <div class="card p-fluid">
+            <h5 class="mb-5" [innerHTML]="title"></h5>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="p-formgrid grid">
+                    <div class="field col-6 md:col-6">
+                        <label htmlFor="type">Question Type</label>
+                        <p-dropdown placeholder="Select question type" formControlName="type" [options]="types"
+                            optionLabel="label" optionValue="value"
+                            (onChange)="questionTypeChanged($event)"></p-dropdown>
+                        <ng-container *ngIf="showQuestionTypeError">
+                            <small *ngIf="form.get('type')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label htmlFor="question" class="">Question</label>
+                        <textarea rows="5" cols="30" pInputTextarea formControlName="question"
+                            class="noresize"></textarea>
+                        <ng-container *ngIf="showQuestionError">
+                            <small *ngIf="form.get('question')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-12 md:col-12" *ngIf="form.controls['type'].value === 'short'">
+                        <label htmlFor="answer">Answer</label>
+                        <textarea rows="3" cols="30" pInputTextarea formControlName="answer"
+                            class="noresize"></textarea>
+                        <ng-container *ngIf="showAnswerError">
+                            <small *ngIf="form.get('answer')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-12 md:col-12 options-container"
+                        *ngIf="form.controls['options'] && form.value.type === 'mcq'">
+                        <button type="button" pButton pRipple label="Add Options"
+                            class="mb-4 p-button-secondary p-button-outlined md:w-10rem" icon="pi pi-plus"
+                            (click)="addOption()"></button>
+                        <div class="grid" formArrayName="options">
+                            <div class="col-12 md:col-6"
+                                *ngFor="let option of options.controls; index as idx; last as isLast">
+                                <div class="p-inputgroup">
+                                    <input id="email" formControlName="{{idx}}" type="text" placeholder="Enter option"
+                                        pInputText class="w-full md:w-30rem">
+                                    <button pButton pRipple type="button" icon="pi pi-times"
+                                        class="remove-option-button p-inputgroup-addon p-button-rounded p-button-danger"
+                                        (click)="removeOption(idx)">
+                                    </button>
+                                </div>
+                                <ng-container *ngIf="option.invalid && option.dirty || option.touched">
+                                    <small *ngIf="option.errors?.['required']" class="block p-error">This field is
+                                        required.</small>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field col-6 md:col-6"
+                        *ngIf="form.controls['options'] && form.controls['options'].valid && form.value.type === 'mcq'">
+                        <label htmlFor="answer">Answer</label>
+                        <p-multiSelect [options]="options.value" formControlName="answer" defaultLabel="Select answer"
+                            display="chip">
+                        </p-multiSelect>
+                        <ng-container *ngIf="showAnswerError">
+                            <small *ngIf="form.get('answer')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-6 md:col-6" *ngIf="form.controls['type'].value === 'boolean'">
+                        <label htmlFor="answer">Answer</label>
+                        <p-dropdown placeholder="Select answer" [options]="booleanOptions" formControlName="answer">
+                        </p-dropdown>
+                        <ng-container *ngIf="showAnswerError">
+                            <small *ngIf="form.get('answer')?.errors?.['required']" class="p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-6 md:col-6">
+                        <label htmlFor="tags">Tags</label>
+                        <p-autoComplete [forceSelection]="true" formControlName="tags" [suggestions]="tags"
+                            (completeMethod)="filterTags($event)" [multiple]="true" [showEmptyMessage]="true"
+                            [unique]="true"></p-autoComplete>
+                        <ng-container *ngIf="showTagsError">
+                            <small *ngIf="form.get('tags')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                    <div class="field col-6 md:col-6">
+                        <label htmlFor="marks">Marks</label>
+                        <p-inputNumber inputId="integeronly" formControlName="marks"> </p-inputNumber>
+                        <ng-container *ngIf="showMarksError">
+                            <small *ngIf="form.get('marks')?.errors?.['required']" class="block p-error">This field is
+                                required.</small>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="Submit" [loading]="submitting" [disabled]="form.invalid" pButton pRipple
+                        label="Submit" class="mb-2 md:w-10rem"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+.add-question-container {
+    ::ng-deep .input-switch {
+        display: block;
+        margin: 0.25rem 0rem;
+        padding: 1rem;
+    }
+
+    .options-container {
+        .remove-option-button {
+            margin-left: 0.5rem;
+        }
+    }
+
+    form {
+        .field {
+            padding: 0.25rem 1rem;
+        }
+    }
+
+}

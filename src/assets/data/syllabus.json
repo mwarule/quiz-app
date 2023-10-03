@@ -1,0 +1,39 @@
+[{
+    "standard": 6,
+    "subjects": [{
+        "name": "Maths",
+        "chapters": [{
+            "name": "Basic Concepts in Geometry"
+        },{
+            "name": "Angles Practice"
+        },{
+            "name": "Integers Practice"
+        },{
+            "name": "Operations on Fractions"
+        },{
+            "name": "Decimal Fractions"
+        },{
+            "name": "Bar Graphs"
+        },{
+            "name": "Symmetry"
+        },{
+            "name": "HCF-LCM"
+        },{
+            "name": "Equations"
+        },{
+            "name": "Ratio-Proportion"
+        },{
+            "name": "Percentage"
+        },{
+            "name": "Profit-Loss"
+        },{
+            "name": "Banks and Simple Interest"
+        },{
+            "name": "Quadrilaterals"
+        },{
+            "name": "Geometrical Constructions"
+        }, {
+            "name": "Three Dimensional Shapes"
+        }]
+    }]
+}]

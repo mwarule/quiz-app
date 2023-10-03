@@ -1,0 +1,186 @@
+<div class="grid questions-container">
+    <div class="col-12 table-container">
+        <p-toolbar styleClass="mb-1 gap-2">
+            <ng-template pTemplate="left">
+                <button pButton pRipple label="New" icon="pi pi-plus" class="mr-2"
+                    (click)="addNewQuestion()"></button>
+                <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                    [disabled]="!selectedQuestions || !selectedQuestions.length"
+                    (click)="showDeleteConfirmation(selectedQuestions)"></button>
+            </ng-template>
+        </p-toolbar>
+        <p-table #dt [autoLayout]="true" responsiveLayout="scroll" [scrollable]="true" scrollHeight="flex"
+            loadingIcon="pi pi-spin pi-spinner" [value]="questions" [rows]="10" [paginator]="true"
+            [globalFilterFields]="['question', 'type', 'tags', 'options', 'answer']" [(selection)]="selectedQuestions"
+            [rowHover]="true" dataKey="uid"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true" [resizableColumns]="true">
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h5 class="m-0">Questions</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="filterQuestions(dt, $event)" placeholder="Search..." />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th></th>
+                    <th pSortableColumn="question" pResizableColumn>Question <p-sortIcon field="question"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="type" pResizableColumn>Type <p-sortIcon field="type"></p-sortIcon></th>
+                    <th pSortableColumn="tags" pResizableColumn>Tags <p-sortIcon field="tags"></p-sortIcon></th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-expanded="expanded">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="data"></p-tableCheckbox>
+                    </td>
+                    <td>
+                        <button type="button" pButton pRipple [pRowToggler]="data" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                    </td>
+                    <td>{{ data.question }}</td>
+                    <td>{{ data.type }}</td>
+                    <td>
+                        <div class="flex flex-row align-items-center sm:align-items-start gap-3">
+                            <p-tag [value]="tag" *ngFor="let tag of data.tags"></p-tag>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex flex-row gap-2">
+                            <button pButton icon="pi pi-pencil" class="md:align-self-end mb-2 p-button-rounded" (click)="editQuestion(data.uid)"></button>
+                            <button pButton icon="pi pi-trash" class="md:align-self-end mb-2 p-button-rounded p-button-danger" (click)="showDeleteConfirmation([data])"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-data>
+               <tr>
+                <td colspan="7">
+                    <div class="p-3">
+                        <div class="flex flex-column xl:flex-row xl:align-items-start gap-4">
+                            <div class="flex flex-row sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                    <div class="text-1xl font-bold text-700">Question Type: {{ data.type }}</div>
+                                    <ng-container *ngIf="data.type === 'mcq' || data.type === 'boolean'">
+                                        <div class="text-1xl font-bold text-700">Options:</div>
+                                        <div class="flex flex-column align-items-start gap-1">
+                                            <ng-container>
+                                                 <span class="flex align-items-center gap-2 options-text ml-5" *ngFor="let option of data.options">
+                                                    <button pButton pRipple type="button" icon="pi pi-check" *ngIf="data.answer && data.answer.includes(option) || option === data.answer; else cross" class="p-button-rounded p-button-success"></button>
+                                                    <ng-template #cross>
+                                                        <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"></button>
+                                                    </ng-template>
+                                                    {{option}}
+                                                 </span>
+                                            </ng-container>
+                                         </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="hasMulitpleAnswers(data.answer); else singleAnswer">
+                                        <div class="text-1xl font-bold text-700">Answer:</div>
+                                        <div class="flex flex-column align-items-start gap-1">
+                                           <ng-container>
+                                                <span class="options-text ml-5" *ngFor="let option of data.answer">
+                                                    {{option}}
+                                                </span>
+                                           </ng-container>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #singleAnswer>
+                                        <div class="text-1xl font-bold text-700">
+                                            Answer: 
+                                            <span class="answer-text-single" [innerHTML]="data.answer">
+                                            </span>
+                                        </div>
+                                    </ng-template>
+                                    <div class="text-1xl font-bold text-700">Marks: {{ data.marks }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+               </tr>
+            </ng-template>
+        </p-table>
+        <!-- <p-dataView #dv [value]="questions" [rows]="5" [paginator]="true" layout="list" [filterBy]="'question,tags'" [sortField]="sortField" [sortOrder]="sortOrder">
+            <ng-template pTemplate="header">
+                <div class="flex flex-column md:flex-row md:justify-content-between gap-5">
+                    <p-dropdown [options]="sortOptions" placeholder="Sort By Price" (onChange)="onSortChange($event)"></p-dropdown>
+                    <span class="p-input-icon-left flex-grow-1">
+                        <i class="pi pi-search"></i>
+                        <input class="w-full" type="search" pInputText placeholder="Search by Name" (input)="onFilter(dv, $event)">
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template let-data pTemplate="listItem">
+                <div class="col-12">
+                    <p-accordion class="w-full">
+                        <p-accordionTab>
+                            <ng-template pTemplate="header">
+                                <div class="flex align-items-center">
+                                    <div class="flex flex-row align-items-center sm:align-items-start gap-3">
+                                        <div class="text-1xl font-bold text-700">{{ data.question }}</div>
+                                        <div class="flex align-items-center gap-1">
+                                            <p-tag severity="info" icon="pi pi-tag" *ngFor="let tag of data.tags" [value]="tag"></p-tag>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="content">
+                                <div class="flex flex-column xl:flex-row xl:align-items-start gap-4">
+                                    <div class="flex flex-row sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-1xl font-bold text-700">Question Type: {{ data.type }}</div>
+                                            <ng-container *ngIf="data.type === 'mcq' || data.type === 'boolean'">
+                                                <div class="text-1xl font-bold text-700">Options:</div>
+                                                <div class="flex flex-column align-items-start gap-1">
+                                                    <ng-container>
+                                                         <span class="flex align-items-center gap-2 options-text ml-5" *ngFor="let option of data.options">
+                                                            <button pButton pRipple type="button" icon="pi pi-check" *ngIf="data.answer && data.answer.includes(option) || option === data.answer; else cross" class="p-button-rounded p-button-success"></button>
+                                                            <ng-template #cross>
+                                                                <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"></button>
+                                                            </ng-template>
+                                                            {{option}}
+                                                         </span>
+                                                    </ng-container>
+                                                 </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="hasMulitpleAnswers(data.answer); else singleAnswer">
+                                                <div class="text-1xl font-bold text-700">Answer:</div>
+                                                <div class="flex flex-column align-items-start gap-1">
+                                                   <ng-container>
+                                                        <span class="options-text ml-5" *ngFor="let option of data.answer">
+                                                            {{option}}
+                                                        </span>
+                                                   </ng-container>
+                                                </div>
+                                            </ng-container>
+                                            <ng-template #singleAnswer>
+                                                <div class="text-1xl font-bold text-700">
+                                                    Answer: 
+                                                    <span [innerHTML]="data.answer">
+                                                    </span>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                        <div class="flex sm:flex-row align-items-center sm:align-items-end gap-3 sm:gap-2 align-self-start">
+                                            <button pButton icon="pi pi-pencil" class="md:align-self-end mb-2 p-button-rounded" (click)="editQuestion(data.uid)"></button>
+                                            <button pButton icon="pi pi-trash" class="md:align-self-end mb-2 p-button-rounded p-button-danger" (click)="deleteQuestion(data.data.uid)"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-accordionTab>
+                    </p-accordion>
+                </div>
+            </ng-template>
+        </p-dataView> -->
+        
+    </div>
+</div>

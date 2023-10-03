@@ -1,0 +1,28 @@
+[{
+    "label": "English",
+    "value": "english"
+}, {
+    "label": "Science",
+    "value": "science"
+}, {
+    "label": "History",
+    "value": "history"
+}, {
+    "label": "Geography",
+    "value": "geography"
+}, {
+    "label": "Civics",
+    "value": "civics"
+}, {
+    "label": "Enviornmental Studies",
+    "value": "evs"
+}, {
+    "label": "Maths",
+    "value": "maths"
+}, {
+    "label": "Sanskrit",
+    "value": "sanskrit"
+}, {
+    "label": "Political Science",
+    "value": "political"
+}]
